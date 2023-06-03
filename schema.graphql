@@ -1,0 +1,65 @@
+type FeePercentOwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  prevOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FeeToTransferred @entity(immutable: true) {
+  id: Bytes!
+  prevFeeTo: Bytes! # address
+  newFeeTo: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnerFeeShareUpdated @entity(immutable: true) {
+  id: Bytes!
+  prevOwnerFeeShare: BigInt! # uint256
+  ownerFeeShare: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  prevOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PairCreated @entity(immutable: true) {
+  id: Bytes!
+  token0: Bytes! # address
+  token1: Bytes! # address
+  pair: Bytes! # address
+  length: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ReferrerFeeShareUpdated @entity(immutable: true) {
+  id: Bytes!
+  referrer: Bytes! # address
+  prevReferrerFeeShare: BigInt! # uint256
+  referrerFeeShare: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetStableOwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  prevOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
