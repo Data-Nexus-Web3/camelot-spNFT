@@ -3,7 +3,7 @@ type Protocol @entity {
   id: Bytes!
 
   " The number of pools deployed "
-  poolCount: int!
+  poolCount: Int!
 
   " Sub entity to traverse into the pools from the protocol level "
   pools: [Pool!]! @derivedFrom(field: "protocol")
@@ -35,16 +35,16 @@ type Position @entity {
   amount: BigInt!
 
   " Timestampe of the lock + Lock duration in seconds "
-  lockedUntil: bigint!
+  lockedUntil: BigInt!
 
   " Boost points assigned - equal to the amount of xGrail used to boost the position "
-  boostPoints: bigint!
+  boostPoints: BigInt!
 }
 
 type Account @entity {
   " The address of the wallet "
-  id: Bytes
+  id: Bytes!
 
   " Sub entity to traverse into The current positions for the wallet "
-  positions: [Positions!]! @derivedFrom(field: "account")
+  positions: [Position!]! @derivedFrom(field: "account")
 }

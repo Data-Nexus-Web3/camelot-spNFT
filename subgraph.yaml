@@ -80,3 +80,29 @@ templates:
       eventHandlers:
         - event: LockPosition(indexed uint256,uint256)
           handler: handleLockPosition
+        - event: AddToPosition(indexed uint256,address,uint256)
+          handler: handleAddToPosition
+        - event: CreatePosition(indexed uint256,uint256,uint256)
+          handler: handleCreatePosition
+        - event: HarvestPosition(indexed uint256,address,uint256)
+          handler: HarvestPosition
+        - event: MergePositions(indexed address,uint256[])
+          handler: MergePositions
+        - event: WithdrawFromPosition(indexed uint256,uint256)
+          handler: WithdrawFromPosition
+        - event: EmergencyWithdraw(indexed uint256,uint256)
+          handler: EmergencyWithdraw
+        - event: PoolUpdated(uint256,uint256)
+          handler: PoolUpdated
+        - event: SetBoost(indexed uint256,uint256)
+          handler: SetBoost
+        - event: SetBoostMultiplierSettings(uint256,uint256)
+          handler: SetBoostMultiplierSettings
+        - event: SplitPosition(indexed uint256,uint256,uint256)
+          handler: SplitPosition
+        - event: SetEmergencyUnlock(bool)
+          handler: SetEmergencyUnlock
+        - event: SetLockMultiplierSettings(uint256,uint256)
+          handler: SetLockMultiplierSettings
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: Transfer
