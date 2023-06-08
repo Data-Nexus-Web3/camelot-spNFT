@@ -1,22 +1,41 @@
 type Protocol @entity {
+  " The address of the core factory for camelot "
   id: Bytes!
+
+  " The number of pools deployed "
   poolCount: int!
+
+  " Sub entity to traverse into the pools from the protocol level "
   pools: [Pool!]! @derivedFrom(field: "protocol")
 }
 
+# Pools represent the different types of token pairs and the liquidity provided
 type Pool @entity {
+  " The address for the pool "
   id: Bytes!
+
+  " link to the protocol entity "
   protocol: Protocol!
+
+  " Sub entity to traverse into the positions from the pool level "
   positions: [Position!]! @derivedFrom(field: "pool")
 }
 
 type Position @entity {
+  " {pool id}-{account id} "
   id: ID!
+
+  " The account that created the position "
   account: Account!
+
+  " The pool that the position relates to "
   pool: Pool!
 }
 
 type Account @entity {
+  " The address of the wallet "
   id: Bytes
+
+  " Sub entity to traverse into The current positions for the wallet "
   positions: [Positions!]! @derivedFrom(field: "account")
 }
