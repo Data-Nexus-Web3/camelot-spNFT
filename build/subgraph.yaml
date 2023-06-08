@@ -1,6 +1,6 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: CamelotFactory
@@ -23,7 +23,7 @@ dataSources:
         - SetStableOwnershipTransferred
       abis:
         - name: CamelotFactory
-          file: ./abis/CamelotFactory.json
+          file: CamelotFactory\abis\CamelotFactory.json
       eventHandlers:
         - event: FeePercentOwnershipTransferred(indexed address,indexed address)
           handler: handleFeePercentOwnershipTransferred
@@ -39,7 +39,7 @@ dataSources:
           handler: handleReferrerFeeShareUpdated
         - event: SetStableOwnershipTransferred(indexed address,indexed address)
           handler: handleSetStableOwnershipTransferred
-      file: ./src/camelot-factory.ts
+      file: CamelotFactory\CamelotFactory.wasm
   - kind: ethereum
     name: NFTPoolFactory
     network: arbitrum
@@ -55,28 +55,8 @@ dataSources:
         - FeePercentOwnershipTransferred
       abis:
         - name: NFTPoolFactory
-          file: ./abis/NFTPoolFactory.json
+          file: NFTPoolFactory\abis\NFTPoolFactory.json
       eventHandlers:
         - event: PoolCreated(indexed address,address)
           handler: handlePoolCreated
-      file: ./src/nft-pool-factory.ts
-## TEMPLATE DATA SOURCES ##
-templates:
-  - name: NFTPool
-    kind: ethereum/contract
-    network: arbitrum
-    source:
-      abi: NFTPool
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      file: ./src/nft-pool.ts
-      entities:
-        - FeePercentOwnershipTransferred
-      abis:
-        - name: NFTPool
-          file: ./abis/NFTPool.json
-      eventHandlers:
-        - event: LockPosition(indexed uint256,uint256)
-          handler: handleLockPosition
+      file: NFTPoolFactory\NFTPoolFactory.wasm
