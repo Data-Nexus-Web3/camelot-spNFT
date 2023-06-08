@@ -30,6 +30,15 @@ type Position @entity {
 
   " The pool that the position relates to "
   pool: Pool!
+
+  " Amount of the CMLT-LP token for the pair "
+  amount: BigInt!
+
+  " Timestampe of the lock + Lock duration in seconds "
+  lockedUntil: bigint!
+
+  " Boost points assigned - equal to the amount of xGrail used to boost the position "
+  boostPoints: bigint!
 }
 
 type Account @entity {
