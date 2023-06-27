@@ -1,5 +1,5 @@
 import { Address } from "@graphprotocol/graph-ts";
-import { Protocol } from "../../generated/schema";
+import { Pool, Protocol } from "../../generated/schema";
 
 //get protocol etc
 export function getProtocol(): Protocol {
@@ -15,4 +15,13 @@ export function getProtocol(): Protocol {
     protocol.poolCount = 0;
   }
   return protocol as Protocol;
+}
+
+export function getPool(): void {
+  let pool = Pool.load();
+
+  if (!pool) {
+    pool = new Pool();
+  }
+  pool.save();
 }
