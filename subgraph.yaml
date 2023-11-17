@@ -3,44 +3,6 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: CamelotFactory
-    network: arbitrum
-    source:
-      address: "0x6EcCab422D763aC031210895C81787E87B43A652"
-      abi: CamelotFactory
-      startBlock: 35061163
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - FeePercentOwnershipTransferred
-        - FeeToTransferred
-        - OwnerFeeShareUpdated
-        - OwnershipTransferred
-        - PairCreated
-        - ReferrerFeeShareUpdated
-        - SetStableOwnershipTransferred
-      abis:
-        - name: CamelotFactory
-          file: ./abis/CamelotFactory.json
-      eventHandlers:
-        - event: FeePercentOwnershipTransferred(indexed address,indexed address)
-          handler: handleFeePercentOwnershipTransferred
-        - event: FeeToTransferred(indexed address,indexed address)
-          handler: handleFeeToTransferred
-        - event: OwnerFeeShareUpdated(uint256,uint256)
-          handler: handleOwnerFeeShareUpdated
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: PairCreated(indexed address,indexed address,address,uint256)
-          handler: handlePairCreated
-        - event: ReferrerFeeShareUpdated(address,uint256,uint256)
-          handler: handleReferrerFeeShareUpdated
-        - event: SetStableOwnershipTransferred(indexed address,indexed address)
-          handler: handleSetStableOwnershipTransferred
-      file: ./src/camelot-factory.ts
-  - kind: ethereum
     name: NFTPoolFactory
     network: arbitrum
     source:
@@ -52,13 +14,47 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - FeePercentOwnershipTransferred
+        - Account
       abis:
         - name: NFTPoolFactory
           file: ./abis/NFTPoolFactory.json
       eventHandlers:
         - event: PoolCreated(indexed address,address)
           handler: handlePoolCreated
+      file: ./src/camelot-factory.ts
+  - kind: ethereum
+    name: NitroPoolFactory
+    network: arbitrum
+    source:
+      address: "0xe0a6b372Ac6AF4B37c7F3a989Fe5d5b194c24569"
+      abi: NitroPoolFactory
+      startBlock: 39342546
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Account
+      abis:
+        - name: NitroPoolFactory
+          file: ./abis/NitroPoolFactory.json
+      eventHandlers:
+        - event: CreateNitroPool(address)
+          handler: handleCreateNitroPool
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: createOwnershipTransferred
+        - event: PublishNitroPool(address)
+          handler: createPublishNitroPool
+        - event: SetDefaultFee(uint256)
+          handler: createSetDefaultFee
+        - event: SetEmergencyRecoveryAddress(address)
+          handler: createSetEmergencyRecoveryAddress
+        - event: SetExemptedAddress(address,bool)
+          handler: createSetExemptedAddress
+        - event: SetFeeAddress(address)
+          handler: createSetFeeAddress
+        - event: SetNitroPoolOwner(address,address)
+          handler: createSetNitroPoolOwner
       file: ./src/nft-pool-factory.ts
 ## TEMPLATE DATA SOURCES ##
 templates:
@@ -106,3 +102,55 @@ templates:
           handler: SetLockMultiplierSettings
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: Transfer
+  - name: NitroPool
+    kind: ethereum/contract
+    network: arbitrum
+    source:
+      abi: NitroPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/nft-pool.ts
+      entities:
+        - Account
+      abis:
+        - name: NitroPool
+          file: ./abis/NitroPool.json
+      eventHandlers:
+        - event: ActivateEmergencyClose()
+          handler: handleActivateEmergencyClose
+        - event: AddRewardsToken1(uint256,uint256)
+          handler: handleAddRewardsToken1
+        - event: AddRewardsToken2(uint256,uint256)
+          handler: handleAddRewardsToken2
+        - event: Deposit(indexed address,uint256,uint256)
+          handler: handleDeposit
+        - event: EmergencyWithdraw(indexed address,uint256,uint256)
+          handler: handleEmergencyWithdraw
+        - event: Harvest(indexed address,address,uint256)
+          handler: handleHarvest
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Publish()
+          handler: handlePublish
+        - event: SetCustomReqContract(address)
+          handler: handleSetCustomReqContract
+        - event: SetDateSettings(uint256,uint256,uint256)
+          handler: handleSetDateSettings
+        - event: SetDescription(string)
+          handler: handleSetDescription
+        - event: SetRequirements(uint256,uint256,uint256,bool)
+          handler: handleSetRequirements
+        - event: SetRewardsToken2(address)
+          handler: handleSetRewardsToken2
+        - event: UpdatePool()
+          handler: handleUpdatePool
+        - event: WhitelistUpdated()
+          handler: handleWhitelistUpdated
+        - event: Withdraw(indexed address,uint256,uint256)
+          handler: handleWithdraw
+        - event: WithdrawRewardsToken1(uint256,uint256)
+          handler: handleWithdrawRewardsToken1
+        - event: WithdrawRewardsToken2(uint256,uint256)
+          handler: handleWithdrawRewardsToken2

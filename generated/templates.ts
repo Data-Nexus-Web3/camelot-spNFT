@@ -15,3 +15,17 @@ export class NFTPool extends DataSourceTemplate {
     DataSourceTemplate.createWithContext("NFTPool", [address.toHex()], context);
   }
 }
+
+export class NitroPool extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("NitroPool", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "NitroPool",
+      [address.toHex()],
+      context
+    );
+  }
+}

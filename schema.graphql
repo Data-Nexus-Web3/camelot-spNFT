@@ -21,6 +21,57 @@ type Pool @entity {
   positions: [Position!]! @derivedFrom(field: "pool")
 }
 
+type Account @entity {
+  " The address of the wallet "
+  id: Bytes!
+
+  " Number of positions this account has "
+  positionCount: Int!
+
+  " Sub entity to traverse into The current positions for the wallet "
+  positions: [Position!]! @derivedFrom(field: "account")
+
+  " Number of open positions this account has "
+  openPositionCount: Int!
+}
+
+type spNFT @entity{
+  " Token address "
+  id: ID!
+
+  " Owner of the spNFT " 
+  owner: Address!
+
+  " Creation timestamp of the spNFT "
+  createdAt: Timestamp!
+
+  " The position of the spNFT "
+  positions: [Position!]! @derivedFrom(field: "spNFT")
+
+  " Whether the spNFT is boosted or not "
+  boost: Boolen!
+
+  " Amount the spNFT is boosted by "
+  boostAmount: Int  
+}
+
+type Nitro @entity {
+  " Token address "
+  id: Address!
+
+  " Creation timestamp "
+  createdAt: Timestamp!
+
+  " Pool owner "
+  poolOwner: Address!
+
+  " Amount deposited into pool "
+  depositAmount: BigInt!
+
+  " Amount withdrawn from the pool "
+  withdrawAmount: 
+}
+
 type Position @entity {
   " {pool id}-{account id} "
   id: ID!
@@ -41,10 +92,16 @@ type Position @entity {
   boostPoints: BigInt!
 }
 
-type Account @entity {
-  " The address of the wallet "
-  id: Bytes!
+type Token @entity {
+  " Token address "
+  id: ID!
 
-  " Sub entity to traverse into The current positions for the wallet "
-  positions: [Position!]! @derivedFrom(field: "account")
+  " Token symbol "
+  symbol: String!
+
+  " Token name "
+  name: String!
+
+  " "
+  decimals: Int!
 }
