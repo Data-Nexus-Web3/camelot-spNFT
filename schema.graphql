@@ -14,11 +14,20 @@ type Pool @entity {
   " The address for the pool "
   id: Bytes!
 
-  " link to the protocol entity "
+  " Creation timestamp of the pool "
+  createdAt: Timestamp!
+
+  " Link to the protocol entity "
   protocol: Protocol!
 
   " Sub entity to traverse into the positions from the pool level "
   positions: [Position!]! @derivedFrom(field: "pool")
+
+  " Token0 "
+  token0: Token!
+
+  " Token1 "
+  token1: Token!
 }
 
 type Account @entity {
@@ -49,7 +58,7 @@ type spNFT @entity{
   positions: [Position!]! @derivedFrom(field: "spNFT")
 
   " Whether the spNFT is boosted or not "
-  boost: Boolen!
+  boost: Boolean!
 
   " Amount the spNFT is boosted by "
   boostAmount: Int  
@@ -102,6 +111,6 @@ type Token @entity {
   " Token name "
   name: String!
 
-  " "
+  " Token decimals "
   decimals: Int!
 }
