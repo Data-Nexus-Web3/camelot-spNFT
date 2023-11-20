@@ -5,6 +5,9 @@ type Protocol @entity {
   " The number of pools deployed "
   spNFTCount: Int!
 
+  " Total number of NFT Pools "
+  NFTPoolCount: Int!
+
   " Sub entity to traverse into the pools from the protocol level "
   spNFT: [spNFT!]! @derivedFrom(field: "protocol")
 }
@@ -18,22 +21,39 @@ type Account @entity {
 
   " Sub entity to traverse into The current positions for the wallet "
   spNFT: [spNFT!]! @derivedFrom(field: "owner")
+}
 
-  " Number of open positions this account has "
-  openPositionCount: Int!
+type NFTPool @entity {
+  " NFT Pool address "
+  id: ID!
+
+  " links the protocol entity "
+  protocol: Protocol!
+
+  " subentity to traverse into the spNFTs "
+  spNFTs: [spNFT!]! @derivedFrom(field: "NFTPool")
+
+  " Emergency unlock for the NFT Pool "
+  emergencyUnlock: Boolean!
 }
 
 type spNFT @entity {
-  " Token address "
+  " NFT Pool address - tokenId "
   id: ID!
 
+  " links the protocol entity "
   protocol: Protocol!
+
+  NFTPool: NFTPool!
 
   " Owner of the spNFT "
   owner: Account!
 
+  " Token ID "
+  tokenId: BigInt!
+
   " Amount of the spNFT "
-  amount: Int!
+  amount: BigInt!
 
   " If staked in Nitro - what the address is "
   nitro: Nitro
@@ -45,10 +65,10 @@ type spNFT @entity {
   lockStartTime: BigInt
 
   " What the boost points are set to "
-  boostPoints: Int
+  boostPoints: BigInt
 
   " What the rewards multipler are "
-  totalMultiplier: Int
+  totalMultiplier: BigInt
 
   " Creation timestamp of the spNFT "
   createdAt: BigInt!
@@ -65,13 +85,13 @@ type Nitro @entity {
   createdAt: BigInt!
 
   " Pool owner "
-  poolOwner: Account!
+  poolOwner: Account
 
   " Amount deposited into pool "
   depositAmount: BigInt!
 
   " Amount withdrawn from the pool "
-  withdrawAmount: BigInt
+  withdrawAmount: BigInt!
 
   " Rewards earned "
   rewardTokens: [Token!]

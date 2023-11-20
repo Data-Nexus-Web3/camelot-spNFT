@@ -21,7 +21,7 @@ dataSources:
       eventHandlers:
         - event: PoolCreated(indexed address,address)
           handler: handlePoolCreated
-      file: ./src/camelot-factory.ts
+      file: ./src/nft-pool-factory.ts
   - kind: ethereum
     name: NitroPoolFactory
     network: arbitrum
@@ -41,21 +41,9 @@ dataSources:
       eventHandlers:
         - event: CreateNitroPool(address)
           handler: handleCreateNitroPool
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: createOwnershipTransferred
         - event: PublishNitroPool(address)
-          handler: createPublishNitroPool
-        - event: SetDefaultFee(uint256)
-          handler: createSetDefaultFee
-        - event: SetEmergencyRecoveryAddress(address)
-          handler: createSetEmergencyRecoveryAddress
-        - event: SetExemptedAddress(address,bool)
-          handler: createSetExemptedAddress
-        - event: SetFeeAddress(address)
-          handler: createSetFeeAddress
-        - event: SetNitroPoolOwner(address,address)
-          handler: createSetNitroPoolOwner
-      file: ./src/nft-pool-factory.ts
+          handler: handlePublishNitroPool
+      file: ./src/nitro-pool-factory.ts
 ## TEMPLATE DATA SOURCES ##
 templates:
   - name: NFTPool
@@ -80,28 +68,22 @@ templates:
           handler: handleAddToPosition
         - event: CreatePosition(indexed uint256,uint256,uint256)
           handler: handleCreatePosition
-        - event: HarvestPosition(indexed uint256,address,uint256)
-          handler: HarvestPosition
         - event: MergePositions(indexed address,uint256[])
-          handler: MergePositions
+          handler: handleMergePositions
         - event: WithdrawFromPosition(indexed uint256,uint256)
-          handler: WithdrawFromPosition
-        - event: EmergencyWithdraw(indexed uint256,uint256)
-          handler: EmergencyWithdraw
-        - event: PoolUpdated(uint256,uint256)
-          handler: PoolUpdated
+          handler: handleWithdrawFromPosition
         - event: SetBoost(indexed uint256,uint256)
-          handler: SetBoost
+          handler: handleSetBoost
         - event: SetBoostMultiplierSettings(uint256,uint256)
-          handler: SetBoostMultiplierSettings
+          handler: handleSetBoostMultiplierSettings
         - event: SplitPosition(indexed uint256,uint256,uint256)
-          handler: SplitPosition
+          handler: handleSplitPosition
         - event: SetEmergencyUnlock(bool)
-          handler: SetEmergencyUnlock
+          handler: handleSetEmergencyUnlock
         - event: SetLockMultiplierSettings(uint256,uint256)
-          handler: SetLockMultiplierSettings
+          handler: handleSetLockMultiplierSettings
         - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: Transfer
+          handler: handleTransfer
   - name: NitroPool
     kind: ethereum/contract
     network: arbitrum
@@ -111,46 +93,28 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
-      file: ./src/nft-pool.ts
+      file: ./src/nitro-pool.ts
       entities:
         - Account
       abis:
         - name: NitroPool
-          file: ./abis/NitroPool.json
+          file: ./abis/nitroPool.json
       eventHandlers:
-        - event: ActivateEmergencyClose()
-          handler: handleActivateEmergencyClose
-        - event: AddRewardsToken1(uint256,uint256)
-          handler: handleAddRewardsToken1
-        - event: AddRewardsToken2(uint256,uint256)
-          handler: handleAddRewardsToken2
         - event: Deposit(indexed address,uint256,uint256)
           handler: handleDeposit
-        - event: EmergencyWithdraw(indexed address,uint256,uint256)
-          handler: handleEmergencyWithdraw
-        - event: Harvest(indexed address,address,uint256)
-          handler: handleHarvest
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
         - event: Publish()
           handler: handlePublish
-        - event: SetCustomReqContract(address)
-          handler: handleSetCustomReqContract
         - event: SetDateSettings(uint256,uint256,uint256)
           handler: handleSetDateSettings
+        - event: Harvest(indexed address,address,uint256)
+          handler: handleHarvest
         - event: SetDescription(string)
           handler: handleSetDescription
-        - event: SetRequirements(uint256,uint256,uint256,bool)
-          handler: handleSetRequirements
         - event: SetRewardsToken2(address)
           handler: handleSetRewardsToken2
         - event: UpdatePool()
           handler: handleUpdatePool
-        - event: WhitelistUpdated()
-          handler: handleWhitelistUpdated
         - event: Withdraw(indexed address,uint256,uint256)
           handler: handleWithdraw
-        - event: WithdrawRewardsToken1(uint256,uint256)
-          handler: handleWithdrawRewardsToken1
-        - event: WithdrawRewardsToken2(uint256,uint256)
-          handler: handleWithdrawRewardsToken2

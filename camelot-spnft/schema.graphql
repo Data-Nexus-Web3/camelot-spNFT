@@ -1,0 +1,8 @@
+type PoolCreated @entity(immutable: true) {
+  id: Bytes!
+  lpToken: Bytes! # address
+  pool: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

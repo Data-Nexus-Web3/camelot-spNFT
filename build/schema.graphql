@@ -1,65 +1,114 @@
-type FeePercentOwnershipTransferred @entity(immutable: true) {
+type Protocol @entity {
+  " The address of the core factory for camelot "
   id: Bytes!
-  prevOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+
+  " The number of pools deployed "
+  spNFTCount: Int!
+
+  " Total number of NFT Pools "
+  NFTPoolCount: Int!
+
+  " Sub entity to traverse into the pools from the protocol level "
+  spNFT: [spNFT!]! @derivedFrom(field: "protocol")
 }
 
-type FeeToTransferred @entity(immutable: true) {
+type Account @entity {
+  " The address of the wallet "
   id: Bytes!
-  prevFeeTo: Bytes! # address
-  newFeeTo: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+
+  " Number of spNFTs this account has "
+  spNFTCount: Int!
+
+  " Sub entity to traverse into The current positions for the wallet "
+  spNFT: [spNFT!]! @derivedFrom(field: "owner")
 }
 
-type OwnerFeeShareUpdated @entity(immutable: true) {
-  id: Bytes!
-  prevOwnerFeeShare: BigInt! # uint256
-  ownerFeeShare: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type NFTPool @entity {
+  " NFT Pool address "
+  id: ID!
+
+  " links the protocol entity "
+  protocol: Protocol!
+
+  " subentity to traverse into the spNFTs "
+  spNFTs: [spNFT!]! @derivedFrom(field: "NFTPool")
+
+  " Emergency unlock for the NFT Pool "
+  emergencyUnlock: Boolean!
 }
 
-type OwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  prevOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type spNFT @entity {
+  " NFT Pool address - tokenId "
+  id: ID!
+
+  " links the protocol entity "
+  protocol: Protocol!
+
+  NFTPool: NFTPool!
+
+  " Owner of the spNFT "
+  owner: Account!
+
+  " Token ID "
+  tokenId: BigInt!
+
+  " Amount of the spNFT "
+  amount: BigInt!
+
+  " If staked in Nitro - what the address is "
+  nitro: Nitro
+
+  " What the lock duration is "
+  lockDuration: BigInt
+
+  " What the start time for the lock is "
+  lockStartTime: BigInt
+
+  " What the boost points are set to "
+  boostPoints: BigInt
+
+  " What the rewards multipler are "
+  totalMultiplier: BigInt
+
+  " Creation timestamp of the spNFT "
+  createdAt: BigInt!
+
+  " Whether the spNFT is boosted or not "
+  boost: Boolean!
 }
 
-type PairCreated @entity(immutable: true) {
-  id: Bytes!
-  token0: Bytes! # address
-  token1: Bytes! # address
-  pair: Bytes! # address
-  length: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Nitro @entity {
+  " Token address "
+  id: ID!
+
+  " Creation timestamp "
+  createdAt: BigInt!
+
+  " Pool owner "
+  poolOwner: Account
+
+  " Amount deposited into pool "
+  depositAmount: BigInt!
+
+  " Amount withdrawn from the pool "
+  withdrawAmount: BigInt!
+
+  " Rewards earned "
+  rewardTokens: [Token!]
+
+  stakedPositions: [spNFT!] @derivedFrom(field: "nitro")
 }
 
-type ReferrerFeeShareUpdated @entity(immutable: true) {
-  id: Bytes!
-  referrer: Bytes! # address
-  prevReferrerFeeShare: BigInt! # uint256
-  referrerFeeShare: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+type Token @entity {
+  " Token address "
+  id: ID!
 
-type SetStableOwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  prevOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  " Token symbol "
+  symbol: String!
+
+  " Token name "
+  name: String!
+
+  " Token decimals "
+  decimals: Int!
 }
