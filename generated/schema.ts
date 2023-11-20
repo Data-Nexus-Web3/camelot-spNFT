@@ -413,19 +413,6 @@ export class spNFT extends Entity {
   set createdAt(value: BigInt) {
     this.set("createdAt", Value.fromBigInt(value));
   }
-
-  get boost(): boolean {
-    let value = this.get("boost");
-    if (!value || value.kind == ValueKind.NULL) {
-      return false;
-    } else {
-      return value.toBoolean();
-    }
-  }
-
-  set boost(value: boolean) {
-    this.set("boost", Value.fromBoolean(value));
-  }
 }
 
 export class Nitro extends Entity {

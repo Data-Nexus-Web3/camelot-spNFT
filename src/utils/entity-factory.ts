@@ -42,6 +42,7 @@ export function getOrCreatespNFT(
   block: ethereum.Block
 ): spNFT {
   let _spNFT = spNFT.load(address.toHexString() + "-" + id.toString());
+  let nftPool = getOrCreateNFTPool(address);
 
   if (!_spNFT) {
     _spNFT = new spNFT(address.toHexString() + "-" + id.toString());
@@ -50,13 +51,12 @@ export function getOrCreatespNFT(
     protocol.save();
 
     _spNFT.protocol = protocol.id; // Protocol!
-    _spNFT.NFTPool = address.toHexString();
+    _spNFT.NFTPool = nftPool.id;
     _spNFT.owner = Address.fromString(
       "0x0000000000000000000000000000000000000000"
     ); // Account!
     _spNFT.amount = BigInt.fromI32(0); // Int!
     _spNFT.createdAt = block.timestamp; // BigInt!
-    _spNFT.boost = false; // Boolean!
   }
 
   return _spNFT as spNFT;

@@ -72,9 +72,6 @@ type spNFT @entity {
 
   " Creation timestamp of the spNFT "
   createdAt: BigInt!
-
-  " Whether the spNFT is boosted or not "
-  boost: Boolean!
 }
 
 type Nitro @entity {
