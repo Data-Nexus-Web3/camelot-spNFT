@@ -52,8 +52,8 @@ export class Protocol extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get poolCount(): i32 {
-    let value = this.get("poolCount");
+  get spNFTCount(): i32 {
+    let value = this.get("spNFTCount");
     if (!value || value.kind == ValueKind.NULL) {
       return 0;
     } else {
@@ -61,77 +61,12 @@ export class Protocol extends Entity {
     }
   }
 
-  set poolCount(value: i32) {
-    this.set("poolCount", Value.fromI32(value));
+  set spNFTCount(value: i32) {
+    this.set("spNFTCount", Value.fromI32(value));
   }
 
-  get pools(): PoolLoader {
-    return new PoolLoader(
-      "Protocol",
-      this.get("id")!
-        .toBytes()
-        .toHexString(),
-      "pools"
-    );
-  }
-}
-
-export class Pool extends Entity {
-  constructor(id: Bytes) {
-    super();
-    this.set("id", Value.fromBytes(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Pool entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type Pool must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("Pool", id.toBytes().toHexString(), this);
-    }
-  }
-
-  static loadInBlock(id: Bytes): Pool | null {
-    return changetype<Pool | null>(
-      store.get_in_block("Pool", id.toHexString())
-    );
-  }
-
-  static load(id: Bytes): Pool | null {
-    return changetype<Pool | null>(store.get("Pool", id.toHexString()));
-  }
-
-  get id(): Bytes {
-    let value = this.get("id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
-  }
-
-  get protocol(): Bytes {
-    let value = this.get("protocol");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set protocol(value: Bytes) {
-    this.set("protocol", Value.fromBytes(value));
-  }
-
-  get positions(): PositionLoader {
-    return new PositionLoader("Pool", this.get("id")!.toString(), "positions");
+  get spNFT(): spNFTLoader {
+    return new spNFTLoader("Protocol", this.get("id")!.toString(), "spNFT");
   }
 }
 
@@ -176,16 +111,38 @@ export class Account extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get positions(): PositionLoader {
-    return new PositionLoader(
-      "Account",
-      this.get("id")!.toString(),
-      "positions"
-    );
+  get spNFTCount(): i32 {
+    let value = this.get("spNFTCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set spNFTCount(value: i32) {
+    this.set("spNFTCount", Value.fromI32(value));
+  }
+
+  get spNFT(): spNFTLoader {
+    return new spNFTLoader("Account", this.get("id")!.toString(), "spNFT");
+  }
+
+  get openPositionCount(): i32 {
+    let value = this.get("openPositionCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set openPositionCount(value: i32) {
+    this.set("openPositionCount", Value.fromI32(value));
   }
 }
 
-export class Position extends Entity {
+export class spNFT extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -193,22 +150,22 @@ export class Position extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Position entity without an ID");
+    assert(id != null, "Cannot save spNFT entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Position must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type spNFT must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Position", id.toString(), this);
+      store.set("spNFT", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): Position | null {
-    return changetype<Position | null>(store.get_in_block("Position", id));
+  static loadInBlock(id: string): spNFT | null {
+    return changetype<spNFT | null>(store.get_in_block("spNFT", id));
   }
 
-  static load(id: string): Position | null {
-    return changetype<Position | null>(store.get("Position", id));
+  static load(id: string): spNFT | null {
+    return changetype<spNFT | null>(store.get("spNFT", id));
   }
 
   get id(): string {
@@ -224,8 +181,8 @@ export class Position extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get account(): Bytes {
-    let value = this.get("account");
+  get protocol(): Bytes {
+    let value = this.get("protocol");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -233,12 +190,12 @@ export class Position extends Entity {
     }
   }
 
-  set account(value: Bytes) {
-    this.set("account", Value.fromBytes(value));
+  set protocol(value: Bytes) {
+    this.set("protocol", Value.fromBytes(value));
   }
 
-  get pool(): Bytes {
-    let value = this.get("pool");
+  get owner(): Bytes {
+    let value = this.get("owner");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -246,47 +203,245 @@ export class Position extends Entity {
     }
   }
 
-  set pool(value: Bytes) {
-    this.set("pool", Value.fromBytes(value));
+  set owner(value: Bytes) {
+    this.set("owner", Value.fromBytes(value));
   }
 
-  get amount(): BigInt {
+  get amount(): i32 {
     let value = this.get("amount");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return 0;
     } else {
-      return value.toBigInt();
+      return value.toI32();
     }
   }
 
-  set amount(value: BigInt) {
-    this.set("amount", Value.fromBigInt(value));
+  set amount(value: i32) {
+    this.set("amount", Value.fromI32(value));
   }
 
-  get lockedUntil(): BigInt {
-    let value = this.get("lockedUntil");
+  get nitro(): string | null {
+    let value = this.get("nitro");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set nitro(value: string | null) {
+    if (!value) {
+      this.unset("nitro");
+    } else {
+      this.set("nitro", Value.fromString(<string>value));
+    }
+  }
+
+  get lockDuration(): BigInt | null {
+    let value = this.get("lockDuration");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
     } else {
       return value.toBigInt();
     }
   }
 
-  set lockedUntil(value: BigInt) {
-    this.set("lockedUntil", Value.fromBigInt(value));
+  set lockDuration(value: BigInt | null) {
+    if (!value) {
+      this.unset("lockDuration");
+    } else {
+      this.set("lockDuration", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get boostPoints(): BigInt {
+  get lockStartTime(): BigInt | null {
+    let value = this.get("lockStartTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set lockStartTime(value: BigInt | null) {
+    if (!value) {
+      this.unset("lockStartTime");
+    } else {
+      this.set("lockStartTime", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get boostPoints(): i32 {
     let value = this.get("boostPoints");
     if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set boostPoints(value: i32) {
+    this.set("boostPoints", Value.fromI32(value));
+  }
+
+  get totalMultiplier(): i32 {
+    let value = this.get("totalMultiplier");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set totalMultiplier(value: i32) {
+    this.set("totalMultiplier", Value.fromI32(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
       return value.toBigInt();
     }
   }
 
-  set boostPoints(value: BigInt) {
-    this.set("boostPoints", Value.fromBigInt(value));
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+
+  get boost(): boolean {
+    let value = this.get("boost");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set boost(value: boolean) {
+    this.set("boost", Value.fromBoolean(value));
+  }
+}
+
+export class Nitro extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Nitro entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Nitro must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Nitro", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Nitro | null {
+    return changetype<Nitro | null>(store.get_in_block("Nitro", id));
+  }
+
+  static load(id: string): Nitro | null {
+    return changetype<Nitro | null>(store.get("Nitro", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+
+  get poolOwner(): Bytes {
+    let value = this.get("poolOwner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set poolOwner(value: Bytes) {
+    this.set("poolOwner", Value.fromBytes(value));
+  }
+
+  get depositAmount(): BigInt {
+    let value = this.get("depositAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set depositAmount(value: BigInt) {
+    this.set("depositAmount", Value.fromBigInt(value));
+  }
+
+  get withdrawAmount(): BigInt | null {
+    let value = this.get("withdrawAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set withdrawAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("withdrawAmount");
+    } else {
+      this.set("withdrawAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get rewardTokens(): Array<string> | null {
+    let value = this.get("rewardTokens");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set rewardTokens(value: Array<string> | null) {
+    if (!value) {
+      this.unset("rewardTokens");
+    } else {
+      this.set("rewardTokens", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get stakedPositions(): spNFTLoader {
+    return new spNFTLoader(
+      "Nitro",
+      this.get("id")!.toString(),
+      "stakedPositions"
+    );
   }
 }
 
@@ -354,9 +509,22 @@ export class Token extends Entity {
   set name(value: string) {
     this.set("name", Value.fromString(value));
   }
+
+  get decimals(): i32 {
+    let value = this.get("decimals");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set decimals(value: i32) {
+    this.set("decimals", Value.fromI32(value));
+  }
 }
 
-export class PoolLoader extends Entity {
+export class spNFTLoader extends Entity {
   _entity: string;
   _field: string;
   _id: string;
@@ -368,26 +536,8 @@ export class PoolLoader extends Entity {
     this._field = field;
   }
 
-  load(): Pool[] {
+  load(): spNFT[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<Pool[]>(value);
-  }
-}
-
-export class PositionLoader extends Entity {
-  _entity: string;
-  _field: string;
-  _id: string;
-
-  constructor(entity: string, id: string, field: string) {
-    super();
-    this._entity = entity;
-    this._id = id;
-    this._field = field;
-  }
-
-  load(): Position[] {
-    let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<Position[]>(value);
+    return changetype<spNFT[]>(value);
   }
 }

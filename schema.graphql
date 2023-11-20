@@ -17,7 +17,7 @@ type Account @entity {
   spNFTCount: Int!
 
   " Sub entity to traverse into The current positions for the wallet "
-  spNFT: [spNFT!]! @derivedFrom(field: "account")
+  spNFT: [spNFT!]! @derivedFrom(field: "owner")
 
   " Number of open positions this account has "
   openPositionCount: Int!
@@ -27,32 +27,31 @@ type spNFT @entity {
   " Token address "
   id: ID!
 
+  protocol: Protocol!
+
   " Owner of the spNFT "
-  owner: Address!
+  owner: Account!
 
   " Amount of the spNFT "
   amount: Int!
 
   " If staked in Nitro - what the address is "
-  nitro: Address
+  nitro: Nitro
 
   " What the lock duration is "
-  lockDuration: Int
+  lockDuration: BigInt
 
   " What the start time for the lock is "
-  lockStartTime: Int
+  lockStartTime: BigInt
 
   " What the boost points are set to "
-  bostPoints: Int
+  boostPoints: Int
 
   " What the rewards multipler are "
   totalMultiplier: Int
 
   " Creation timestamp of the spNFT "
-  createdAt: Timestamp!
-
-  " The position of the spNFT "
-  positions: [Position!]! @derivedFrom(field: "spNFT")
+  createdAt: BigInt!
 
   " Whether the spNFT is boosted or not "
   boost: Boolean!
@@ -60,22 +59,24 @@ type spNFT @entity {
 
 type Nitro @entity {
   " Token address "
-  id: Address!
+  id: ID!
 
   " Creation timestamp "
-  createdAt: Timestamp!
+  createdAt: BigInt!
 
   " Pool owner "
-  poolOwner: Address!
+  poolOwner: Account!
 
   " Amount deposited into pool "
   depositAmount: BigInt!
 
   " Amount withdrawn from the pool "
-  withdrawAmount: Int
+  withdrawAmount: BigInt
 
   " Rewards earned "
-  rewardTokens: Amount
+  rewardTokens: [Token!]
+
+  stakedPositions: [spNFT!] @derivedFrom(field: "nitro")
 }
 
 type Token @entity {
