@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: NFTPoolFactory
-    network: arbitrum
+    network: arbitrum-one
     source:
       address: "0x6dB1EF0dF42e30acF139A70C1Ed0B7E6c51dBf6d"
       abi: NFTPoolFactory
@@ -24,7 +24,7 @@ dataSources:
       file: ./src/nft-pool-factory.ts
   - kind: ethereum
     name: NitroPoolFactory
-    network: arbitrum
+    network: arbitrum-one
     source:
       address: "0xe0a6b372Ac6AF4B37c7F3a989Fe5d5b194c24569"
       abi: NitroPoolFactory
@@ -48,7 +48,7 @@ dataSources:
 templates:
   - name: NFTPool
     kind: ethereum/contract
-    network: arbitrum
+    network: arbitrum-one
     source:
       abi: NFTPool
     mapping:
@@ -86,7 +86,7 @@ templates:
           handler: handleTransfer
   - name: NitroPool
     kind: ethereum/contract
-    network: arbitrum
+    network: arbitrum-one
     source:
       abi: NitroPool
     mapping:
