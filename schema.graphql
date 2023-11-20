@@ -3,53 +3,50 @@ type Protocol @entity {
   id: Bytes!
 
   " The number of pools deployed "
-  poolCount: Int!
+  spNFTCount: Int!
 
   " Sub entity to traverse into the pools from the protocol level "
-  pools: [Pool!]! @derivedFrom(field: "protocol")
-}
-
-# Pools represent the different types of token pairs and the liquidity provided
-type Pool @entity {
-  " The address for the pool "
-  id: Bytes!
-
-  " Creation timestamp of the pool "
-  createdAt: Timestamp!
-
-  " Link to the protocol entity "
-  protocol: Protocol!
-
-  " Sub entity to traverse into the positions from the pool level "
-  positions: [Position!]! @derivedFrom(field: "pool")
-
-  " Token0 "
-  token0: Token!
-
-  " Token1 "
-  token1: Token!
+  spNFT: [spNFT!]! @derivedFrom(field: "protocol")
 }
 
 type Account @entity {
   " The address of the wallet "
   id: Bytes!
 
-  " Number of positions this account has "
-  positionCount: Int!
+  " Number of spNFTs this account has "
+  spNFTCount: Int!
 
   " Sub entity to traverse into The current positions for the wallet "
-  positions: [Position!]! @derivedFrom(field: "account")
+  spNFT: [spNFT!]! @derivedFrom(field: "account")
 
   " Number of open positions this account has "
   openPositionCount: Int!
 }
 
-type spNFT @entity{
+type spNFT @entity {
   " Token address "
   id: ID!
 
-  " Owner of the spNFT " 
+  " Owner of the spNFT "
   owner: Address!
+
+  " Amount of the spNFT "
+  amount: Int!
+
+  " If staked in Nitro - what the address is "
+  nitro: Address
+
+  " What the lock duration is "
+  lockDuration: Int
+
+  " What the start time for the lock is "
+  lockStartTime: Int
+
+  " What the boost points are set to "
+  bostPoints: Int
+
+  " What the rewards multipler are "
+  totalMultiplier: Int
 
   " Creation timestamp of the spNFT "
   createdAt: Timestamp!
@@ -59,9 +56,6 @@ type spNFT @entity{
 
   " Whether the spNFT is boosted or not "
   boost: Boolean!
-
-  " Amount the spNFT is boosted by "
-  boostAmount: Int  
 }
 
 type Nitro @entity {
@@ -78,27 +72,10 @@ type Nitro @entity {
   depositAmount: BigInt!
 
   " Amount withdrawn from the pool "
-  withdrawAmount: 
-}
+  withdrawAmount: Int
 
-type Position @entity {
-  " {pool id}-{account id} "
-  id: ID!
-
-  " The account that created the position "
-  account: Account!
-
-  " The pool that the position relates to "
-  pool: Pool!
-
-  " Amount of the CMLT-LP token for the pair "
-  amount: BigInt!
-
-  " Timestampe of the lock + Lock duration in seconds "
-  lockedUntil: BigInt!
-
-  " Boost points assigned - equal to the amount of xGrail used to boost the position "
-  boostPoints: BigInt!
+  " Rewards earned "
+  rewardTokens: Amount
 }
 
 type Token @entity {
