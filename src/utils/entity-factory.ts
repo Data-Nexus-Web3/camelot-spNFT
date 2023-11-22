@@ -30,6 +30,11 @@ export function getOrCreateNFTPool(address: Address): NFTPool {
   if (!nftPool) {
     nftPool = new NFTPool(address.toHexString());
     nftPool.emergencyUnlock = false;
+    let protocol = getProtocol();
+    nftPool.protocol = protocol.id;
+    protocol.NFTPoolCount = protocol.NFTPoolCount + 1;
+
+    protocol.save();
     nftPool.save();
   }
 
