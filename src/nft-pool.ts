@@ -53,12 +53,16 @@ export function handleAddToPosition(event: AddToPosition): void {
 //
 export function handleWithdrawFromPosition(event: WithdrawFromPosition): void {
   let spNFT = getOrCreatespNFT(event.address, event.params.tokenId, event.block);
-
+  let account = getOrCreateAccount(Address.fromBytes(spNFT.owner));
   spNFT.amount = spNFT.amount.minus(event.params.amount);
 
   spNFT.save();
 
-  if (spNFT.amount == BigInt.fromI32(0)) store.remove("spNFT", spNFT.id);
+  if (spNFT.amount == BigInt.fromI32(0)) {
+    store.remove("spNFT", spNFT.id);
+    account.spNFTCount = account.spNFTCount - 1;
+    account.save();
+  }
 }
 
 //
@@ -119,9 +123,11 @@ export function handleMergePositions(event: MergePositions): void {
     spNFT.amount = spNFT.amount.plus(mergedPosition.amount);
     store.remove("spNFT", mergedPosition.id);
 
-    if (spNFT.lockDuration && mergedPosition.lockDuration) {
-      if (spNFT.lockDuration.lt(mergedPosition.lockDuration)) {
-        spNFT.lockDuration = mergedPosition.lockDuration;
+    let sLockDuration = spNFT.lockDuration;
+    let mLockDuration = mergedPosition.lockDuration;
+    if (sLockDuration && mLockDuration) {
+      if (sLockDuration.lt(mLockDuration)) {
+        spNFT.lockDuration = mLockDuration;
       }
     }
 

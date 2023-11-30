@@ -61,6 +61,10 @@ templates:
       abis:
         - name: NFTPool
           file: ./abis/NFTPool.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: erc20Bytes
+          file: ./abis/erc20Bytes.json
       eventHandlers:
         - event: LockPosition(indexed uint256,uint256)
           handler: handleLockPosition
