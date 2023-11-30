@@ -99,6 +99,10 @@ templates:
       abis:
         - name: NitroPool
           file: ./abis/nitroPool.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20Bytes
+          file: ./abis/ERC20Bytes.json
       eventHandlers:
         - event: Deposit(indexed address,uint256,uint256)
           handler: handleDeposit

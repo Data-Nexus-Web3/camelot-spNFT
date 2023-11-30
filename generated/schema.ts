@@ -81,6 +81,14 @@ export class Protocol extends Entity {
   get spNFT(): spNFTLoader {
     return new spNFTLoader("Protocol", this.get("id")!.toString(), "spNFT");
   }
+
+  get spNFTPool(): NFTPoolLoader {
+    return new NFTPoolLoader(
+      "Protocol",
+      this.get("id")!.toString(),
+      "spNFTPool"
+    );
+  }
 }
 
 export class Account extends Entity {
@@ -316,8 +324,8 @@ export class spNFT extends Entity {
     this.set("amount", Value.fromBigInt(value));
   }
 
-  get nitro(): string | null {
-    let value = this.get("nitro");
+  get nitroPool(): string | null {
+    let value = this.get("nitroPool");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -325,11 +333,11 @@ export class spNFT extends Entity {
     }
   }
 
-  set nitro(value: string | null) {
+  set nitroPool(value: string | null) {
     if (!value) {
-      this.unset("nitro");
+      this.unset("nitroPool");
     } else {
-      this.set("nitro", Value.fromString(<string>value));
+      this.set("nitroPool", Value.fromString(<string>value));
     }
   }
 
@@ -415,7 +423,7 @@ export class spNFT extends Entity {
   }
 }
 
-export class Nitro extends Entity {
+export class NitroPool extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -423,22 +431,22 @@ export class Nitro extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Nitro entity without an ID");
+    assert(id != null, "Cannot save NitroPool entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Nitro must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type NitroPool must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Nitro", id.toString(), this);
+      store.set("NitroPool", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): Nitro | null {
-    return changetype<Nitro | null>(store.get_in_block("Nitro", id));
+  static loadInBlock(id: string): NitroPool | null {
+    return changetype<NitroPool | null>(store.get_in_block("NitroPool", id));
   }
 
-  static load(id: string): Nitro | null {
-    return changetype<Nitro | null>(store.get("Nitro", id));
+  static load(id: string): NitroPool | null {
+    return changetype<NitroPool | null>(store.get("NitroPool", id));
   }
 
   get id(): string {
@@ -452,6 +460,36 @@ export class Nitro extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get protocol(): Bytes {
+    let value = this.get("protocol");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set protocol(value: Bytes) {
+    this.set("protocol", Value.fromBytes(value));
+  }
+
+  get description(): string | null {
+    let value = this.get("description");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set description(value: string | null) {
+    if (!value) {
+      this.unset("description");
+    } else {
+      this.set("description", Value.fromString(<string>value));
+    }
   }
 
   get createdAt(): BigInt {
@@ -484,6 +522,19 @@ export class Nitro extends Entity {
     }
   }
 
+  get amount(): BigInt {
+    let value = this.get("amount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
+  }
+
   get depositAmount(): BigInt {
     let value = this.get("depositAmount");
     if (!value || value.kind == ValueKind.NULL) {
@@ -510,6 +561,45 @@ export class Nitro extends Entity {
     this.set("withdrawAmount", Value.fromBigInt(value));
   }
 
+  get harvestStartTime(): BigInt {
+    let value = this.get("harvestStartTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set harvestStartTime(value: BigInt) {
+    this.set("harvestStartTime", Value.fromBigInt(value));
+  }
+
+  get endTime(): BigInt {
+    let value = this.get("endTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set endTime(value: BigInt) {
+    this.set("endTime", Value.fromBigInt(value));
+  }
+
+  get depositEndTime(): BigInt {
+    let value = this.get("depositEndTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set depositEndTime(value: BigInt) {
+    this.set("depositEndTime", Value.fromBigInt(value));
+  }
+
   get rewardTokens(): Array<string> | null {
     let value = this.get("rewardTokens");
     if (!value || value.kind == ValueKind.NULL) {
@@ -529,7 +619,7 @@ export class Nitro extends Entity {
 
   get stakedPositions(): spNFTLoader {
     return new spNFTLoader(
-      "Nitro",
+      "NitroPool",
       this.get("id")!.toString(),
       "stakedPositions"
     );
@@ -630,5 +720,23 @@ export class spNFTLoader extends Entity {
   load(): spNFT[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<spNFT[]>(value);
+  }
+}
+
+export class NFTPoolLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): NFTPool[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<NFTPool[]>(value);
   }
 }

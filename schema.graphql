@@ -8,8 +8,11 @@ type Protocol @entity {
   " Total number of NFT Pools "
   NFTPoolCount: Int!
 
-  " Sub entity to traverse into the pools from the protocol level "
+  " Sub entity to traverse into all positions from the protocol level "
   spNFT: [spNFT!]! @derivedFrom(field: "protocol")
+
+  " Sub entity to traverse into the NFT pools from the protocol level "
+  spNFTPool: [NFTPool!]! @derivedFrom(field: "protocol")
 }
 
 type Account @entity {
@@ -56,7 +59,7 @@ type spNFT @entity {
   amount: BigInt!
 
   " If staked in Nitro - what the address is "
-  nitro: Nitro
+  nitroPool: NitroPool
 
   " What the lock duration is "
   lockDuration: BigInt
@@ -74,9 +77,15 @@ type spNFT @entity {
   createdAt: BigInt!
 }
 
-type Nitro @entity {
+type NitroPool @entity {
   " Token address "
   id: ID!
+
+  " links the protocol entity "
+  protocol: Protocol!
+
+  " Description of  the Nitro Pool "
+  description: String
 
   " Creation timestamp "
   createdAt: BigInt!
@@ -84,16 +93,28 @@ type Nitro @entity {
   " Pool owner "
   poolOwner: Account
 
-  " Amount deposited into pool "
+  " Current amount in the pool "
+  amount: BigInt!
+
+  " Total amount that has ever been deposited into pool "
   depositAmount: BigInt!
 
-  " Amount withdrawn from the pool "
+  " Total amount that has ever been withdrawn from the pool "
   withdrawAmount: BigInt!
+
+  " Timestamp for when harvesting can commence "
+  harvestStartTime: BigInt!
+
+  " "
+  endTime: BigInt!
+
+  " Timestamp for when deposits are no longer able to be placed in the nitro pool "
+  depositEndTime: BigInt!
 
   " Rewards earned "
   rewardTokens: [Token!]
 
-  stakedPositions: [spNFT!] @derivedFrom(field: "nitro")
+  stakedPositions: [spNFT!] @derivedFrom(field: "nitroPool")
 }
 
 type Token @entity {
