@@ -3,46 +3,8 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: CamelotFactory
-    network: arbitrum
-    source:
-      address: "0x6EcCab422D763aC031210895C81787E87B43A652"
-      abi: CamelotFactory
-      startBlock: 35061163
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - FeePercentOwnershipTransferred
-        - FeeToTransferred
-        - OwnerFeeShareUpdated
-        - OwnershipTransferred
-        - PairCreated
-        - ReferrerFeeShareUpdated
-        - SetStableOwnershipTransferred
-      abis:
-        - name: CamelotFactory
-          file: ./abis/CamelotFactory.json
-      eventHandlers:
-        - event: FeePercentOwnershipTransferred(indexed address,indexed address)
-          handler: handleFeePercentOwnershipTransferred
-        - event: FeeToTransferred(indexed address,indexed address)
-          handler: handleFeeToTransferred
-        - event: OwnerFeeShareUpdated(uint256,uint256)
-          handler: handleOwnerFeeShareUpdated
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: PairCreated(indexed address,indexed address,address,uint256)
-          handler: handlePairCreated
-        - event: ReferrerFeeShareUpdated(address,uint256,uint256)
-          handler: handleReferrerFeeShareUpdated
-        - event: SetStableOwnershipTransferred(indexed address,indexed address)
-          handler: handleSetStableOwnershipTransferred
-      file: ./src/camelot-factory.ts
-  - kind: ethereum
     name: NFTPoolFactory
-    network: arbitrum
+    network: arbitrum-one
     source:
       address: "0x6dB1EF0dF42e30acF139A70C1Ed0B7E6c51dBf6d"
       abi: NFTPoolFactory
@@ -52,7 +14,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - FeePercentOwnershipTransferred
+        - Account
       abis:
         - name: NFTPoolFactory
           file: ./abis/NFTPoolFactory.json
@@ -60,11 +22,33 @@ dataSources:
         - event: PoolCreated(indexed address,address)
           handler: handlePoolCreated
       file: ./src/nft-pool-factory.ts
+  - kind: ethereum
+    name: NitroPoolFactory
+    network: arbitrum-one
+    source:
+      address: "0xe0a6b372Ac6AF4B37c7F3a989Fe5d5b194c24569"
+      abi: NitroPoolFactory
+      startBlock: 39342546
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Account
+      abis:
+        - name: NitroPoolFactory
+          file: ./abis/NitroPoolFactory.json
+      eventHandlers:
+        - event: CreateNitroPool(address)
+          handler: handleCreateNitroPool
+        - event: PublishNitroPool(address)
+          handler: handlePublishNitroPool
+      file: ./src/nitro-pool-factory.ts
 ## TEMPLATE DATA SOURCES ##
 templates:
   - name: NFTPool
     kind: ethereum/contract
-    network: arbitrum
+    network: arbitrum-one
     source:
       abi: NFTPool
     mapping:
@@ -84,25 +68,57 @@ templates:
           handler: handleAddToPosition
         - event: CreatePosition(indexed uint256,uint256,uint256)
           handler: handleCreatePosition
-        - event: HarvestPosition(indexed uint256,address,uint256)
-          handler: HarvestPosition
         - event: MergePositions(indexed address,uint256[])
-          handler: MergePositions
+          handler: handleMergePositions
         - event: WithdrawFromPosition(indexed uint256,uint256)
-          handler: WithdrawFromPosition
-        - event: EmergencyWithdraw(indexed uint256,uint256)
-          handler: EmergencyWithdraw
-        - event: PoolUpdated(uint256,uint256)
-          handler: PoolUpdated
+          handler: handleWithdrawFromPosition
         - event: SetBoost(indexed uint256,uint256)
-          handler: SetBoost
+          handler: handleSetBoost
         - event: SetBoostMultiplierSettings(uint256,uint256)
-          handler: SetBoostMultiplierSettings
+          handler: handleSetBoostMultiplierSettings
         - event: SplitPosition(indexed uint256,uint256,uint256)
-          handler: SplitPosition
+          handler: handleSplitPosition
         - event: SetEmergencyUnlock(bool)
-          handler: SetEmergencyUnlock
+          handler: handleSetEmergencyUnlock
         - event: SetLockMultiplierSettings(uint256,uint256)
-          handler: SetLockMultiplierSettings
+          handler: handleSetLockMultiplierSettings
         - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: Transfer
+          handler: handleTransfer
+  - name: NitroPool
+    kind: ethereum/contract
+    network: arbitrum-one
+    source:
+      abi: NitroPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/nitro-pool.ts
+      entities:
+        - Account
+      abis:
+        - name: NitroPool
+          file: ./abis/nitroPool.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20Bytes
+          file: ./abis/ERC20Bytes.json
+      eventHandlers:
+        - event: Deposit(indexed address,uint256,uint256)
+          handler: handleDeposit
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Publish()
+          handler: handlePublish
+        - event: SetDateSettings(uint256,uint256,uint256)
+          handler: handleSetDateSettings
+        - event: Harvest(indexed address,address,uint256)
+          handler: handleHarvest
+        - event: SetDescription(string)
+          handler: handleSetDescription
+        - event: SetRewardsToken2(address)
+          handler: handleSetRewardsToken2
+        - event: UpdatePool()
+          handler: handleUpdatePool
+        - event: Withdraw(indexed address,uint256,uint256)
+          handler: handleWithdraw
