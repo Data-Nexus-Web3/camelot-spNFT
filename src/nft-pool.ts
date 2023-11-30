@@ -90,6 +90,7 @@ export function handleSplitPosition(event: SplitPosition): void {
   let owner = getOrCreateAccount(Address.fromBytes(spNFT.owner));
 
   spNFT.amount = spNFT.amount.minus(event.params.splitAmount);
+  spNFT.boostPoints = BigInt.fromI32(0);
   spNFT.save();
 
   let newspNFT = getOrCreatespNFT(event.address, event.params.newTokenId, event.block);
@@ -97,6 +98,7 @@ export function handleSplitPosition(event: SplitPosition): void {
   newspNFT.amount = event.params.splitAmount;
   newspNFT.lockDuration = spNFT.lockDuration;
   newspNFT.lockStartTime = spNFT.lockStartTime;
+  newspNFT.boostPoints = BigInt.fromI32(0);
 
   newspNFT.save();
 
@@ -116,6 +118,12 @@ export function handleMergePositions(event: MergePositions): void {
 
     spNFT.amount = spNFT.amount.plus(mergedPosition.amount);
     store.remove("spNFT", mergedPosition.id);
+
+    if (spNFT.lockDuration && mergedPosition.lockDuration) {
+      if (spNFT.lockDuration.lt(mergedPosition.lockDuration)) {
+        spNFT.lockDuration = mergedPosition.lockDuration;
+      }
+    }
 
     protocol.spNFTCount = protocol.spNFTCount - 1;
     owner.spNFTCount = owner.spNFTCount - 1;
